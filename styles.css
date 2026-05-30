@@ -1,0 +1,731 @@
+/* ==========================================
+   Quick Links - Obsidian 插件样式表
+   ========================================== */
+
+/* ---------- CSS 变量（兼容 Obsidian 主题） ---------- */
+.ql-view-container {
+  --ql-bg-primary: var(--background-primary);
+  --ql-bg-secondary: var(--background-secondary);
+  --ql-bg-hover: var(--background-modifier-hover);
+  --ql-bg-active: var(--background-modifier-active);
+  --ql-text-normal: var(--text-normal);
+  --ql-text-muted: var(--text-muted);
+  --ql-text-faint: var(--text-faint);
+  --ql-border-color: var(--background-modifier-border);
+  --ql-accent: var(--interactive-accent);
+  --ql-accent-hover: var(--interactive-accent-hover);
+  --ql-radius: var(--radius-m, 6px);
+  --ql-radius-sm: var(--radius-s, 4px);
+  --ql-shadow: var(--shadow-s);
+  --ql-font: var(--font-interface);
+  --ql-font-size: var(--font-text-size, 14px);
+  --ql-line-height: var(--line-height-normal, 1.5);
+
+  /* 平台颜色 */
+  --ql-color-tencent: #2B7FF5;
+  --ql-color-feishu: #3370FF;
+  --ql-color-web: #6B7280;
+
+  font-family: var(--ql-font);
+  font-size: var(--ql-font-size);
+  line-height: var(--ql-line-height);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ---------- 工具栏 ---------- */
+.ql-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--ql-border-color);
+  background: var(--ql-bg-secondary);
+  flex-wrap: wrap;
+}
+
+.ql-platform-filters {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.ql-filter-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+  background: var(--ql-bg-primary);
+  border: 1px solid var(--ql-border-color);
+  color: var(--ql-text-muted);
+  white-space: nowrap;
+}
+
+.ql-filter-tag:hover {
+  background: var(--ql-bg-hover);
+  color: var(--ql-text-normal);
+}
+
+.ql-filter-tag.ql-filter-active {
+  color: #fff;
+  border-color: transparent;
+}
+
+.ql-filter-tag.ql-plat-all.ql-filter-active {
+  background: linear-gradient(135deg, #2B7FF5, #3370FF);
+}
+
+.ql-filter-tag.ql-plat-tencent.ql-filter-active {
+  background: var(--ql-color-tencent);
+}
+
+.ql-filter-tag.ql-plat-feishu.ql-filter-active {
+  background: var(--ql-color-feishu);
+}
+
+.ql-filter-tag.ql-plat-web.ql-filter-active {
+  background: var(--ql-color-web);
+}
+
+.ql-search-group {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 150px;
+  max-width: 300px;
+  position: relative;
+}
+
+.ql-search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--ql-text-faint);
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+  width: 14px;
+  height: 14px;
+}
+
+.ql-search-input {
+  width: 100%;
+  padding: 6px 12px 6px 32px;
+  border: 1px solid var(--ql-border-color);
+  border-radius: var(--ql-radius);
+  background: var(--ql-bg-primary);
+  color: var(--ql-text-normal);
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.ql-search-input:focus {
+  border-color: var(--ql-accent);
+}
+
+.ql-search-input::placeholder {
+  color: var(--ql-text-faint);
+}
+
+.ql-toolbar-buttons {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+/* ---------- 主容器（双栏布局） ---------- */
+.ql-main-container {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  height: 0; /* 配合flex: 1，防止溢出 */
+}
+
+/* ---------- 左侧面板 ---------- */
+.ql-left-panel {
+  flex: 0 0 42%;
+  min-width: 200px;
+  max-width: 420px;
+  border-right: 1px solid var(--ql-border-color);
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: var(--ql-bg-primary);
+}
+
+/* ---------- 右侧面板 ---------- */
+.ql-right-panel {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: var(--ql-bg-secondary);
+  padding: 24px;
+}
+
+/* ---------- 分类分组 ---------- */
+.ql-category-group {
+  border-bottom: 1px solid var(--ql-border-color);
+}
+
+.ql-category-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.1s ease;
+  border-left: 3px solid transparent;
+}
+
+.ql-category-header:hover {
+  background: var(--ql-bg-hover);
+}
+
+.ql-category-arrow {
+  font-size: 10px;
+  color: var(--ql-text-faint);
+  width: 14px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.ql-category-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.ql-category-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ql-text-normal);
+  flex: 1;
+}
+
+.ql-category-count {
+  font-size: 11px;
+  color: var(--ql-text-faint);
+  flex-shrink: 0;
+}
+
+/* ---------- 链接项 ---------- */
+.ql-link-items {
+  /* 子项容器 */
+}
+
+.ql-link-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px 8px 32px;
+  cursor: pointer;
+  transition: background 0.1s ease;
+  border-left: 3px solid transparent;
+  font-size: 13px;
+}
+
+.ql-link-item:hover {
+  background: var(--ql-bg-hover);
+}
+
+.ql-link-item.ql-link-selected {
+  background: var(--ql-bg-active);
+  border-left-color: var(--ql-accent);
+}
+
+.ql-link-favorite {
+  font-size: 12px;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.ql-link-title {
+  flex: 1;
+  color: var(--ql-text-normal);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ---------- 平台标签 ---------- */
+.ql-platform-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+  flex-shrink: 0;
+  border: 1px solid transparent;
+}
+
+.ql-plat-tencent {
+  color: var(--ql-color-tencent);
+  background: rgba(43, 127, 245, 0.1);
+  border-color: rgba(43, 127, 245, 0.2);
+}
+
+.ql-plat-feishu {
+  color: var(--ql-color-feishu);
+  background: rgba(51, 112, 255, 0.1);
+  border-color: rgba(51, 112, 255, 0.2);
+}
+
+.ql-plat-web {
+  color: var(--ql-color-web);
+  background: rgba(107, 114, 128, 0.1);
+  border-color: rgba(107, 114, 128, 0.2);
+}
+
+.ql-platform-icon {
+  flex-shrink: 0;
+}
+
+/* ---------- 详情面板 ---------- */
+.ql-detail-card {
+  max-width: 600px;
+}
+
+.ql-detail-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.ql-detail-fav {
+  font-size: 18px;
+  cursor: default;
+  margin-top: 4px;
+}
+
+.ql-detail-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--ql-text-normal);
+  margin: 0;
+  line-height: 1.3;
+  word-break: break-word;
+}
+
+.ql-detail-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--ql-border-color);
+}
+
+.ql-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+}
+
+.ql-meta-label {
+  color: var(--ql-text-faint);
+}
+
+.ql-meta-value {
+  color: var(--ql-text-muted);
+}
+
+.ql-detail-section-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ql-text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.ql-detail-description {
+  margin-bottom: 20px;
+}
+
+.ql-detail-desc-text {
+  color: var(--ql-text-muted);
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.ql-detail-url-section {
+  margin-bottom: 24px;
+}
+
+.ql-detail-url-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--ql-border-color);
+  border-radius: var(--ql-radius-sm);
+  background: var(--ql-bg-primary);
+  color: var(--ql-text-muted);
+  font-size: 12px;
+  font-family: var(--font-monospace);
+  cursor: text;
+  outline: none;
+}
+
+/* ---------- 操作按钮区域 ---------- */
+.ql-detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* ---------- 通用按钮 ---------- */
+.ql-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 16px;
+  border: 1px solid transparent;
+  border-radius: var(--ql-radius-sm);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+  white-space: nowrap;
+  font-family: var(--ql-font);
+}
+
+.ql-btn:active {
+  transform: scale(0.97);
+}
+
+.ql-btn-primary {
+  background: var(--ql-accent);
+  color: #fff;
+  border-color: var(--ql-accent);
+}
+
+.ql-btn-primary:hover {
+  background: var(--ql-accent-hover);
+}
+
+.ql-btn-secondary {
+  background: var(--ql-bg-primary);
+  color: var(--ql-text-normal);
+  border-color: var(--ql-border-color);
+}
+
+.ql-btn-secondary:hover {
+  background: var(--ql-bg-hover);
+}
+
+.ql-btn-danger {
+  background: transparent;
+  color: #E53E3E;
+  border-color: rgba(229, 62, 62, 0.3);
+}
+
+.ql-btn-danger:hover {
+  background: rgba(229, 62, 62, 0.1);
+  border-color: rgba(229, 62, 62, 0.5);
+}
+
+.ql-btn-small {
+  padding: 2px 10px;
+  font-size: 12px;
+}
+
+/* ---------- 空状态 ---------- */
+.ql-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 16px;
+  text-align: center;
+  color: var(--ql-text-muted);
+}
+
+.ql-empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.ql-empty-state p {
+  margin: 4px 0;
+}
+
+.ql-empty-hint {
+  font-size: 12px;
+  color: var(--ql-text-faint);
+}
+
+.ql-detail-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+  color: var(--ql-text-muted);
+}
+
+.ql-detail-empty-icon {
+  font-size: 64px;
+  margin-bottom: 16px;
+  opacity: 0.4;
+}
+
+.ql-detail-empty h3 {
+  margin-bottom: 8px;
+}
+
+.ql-detail-empty p {
+  margin: 4px 0;
+}
+
+/* ---------- 弹窗样式 ---------- */
+.ql-modal {
+  min-width: 460px;
+  max-width: 560px;
+}
+
+.ql-modal-title {
+  margin: 0 0 16px 0;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--ql-border-color);
+  font-size: 18px;
+}
+
+.ql-modal .setting-item {
+  border-top: none !important;
+  padding: 8px 0;
+}
+
+.ql-modal .setting-item-info {
+  width: 100px;
+  flex-shrink: 0;
+}
+
+.ql-modal .setting-item-control {
+  flex: 1;
+}
+
+.ql-form-input {
+  width: 100%;
+  padding: 6px 10px;
+  border: 1px solid var(--ql-border-color);
+  border-radius: var(--ql-radius-sm);
+  background: var(--ql-bg-primary);
+  color: var(--ql-text-normal);
+  font-size: 13px;
+  outline: none;
+  font-family: var(--ql-font);
+}
+
+.ql-form-input:focus {
+  border-color: var(--ql-accent);
+}
+
+.ql-form-textarea {
+  width: 100%;
+  padding: 6px 10px;
+  border: 1px solid var(--ql-border-color);
+  border-radius: var(--ql-radius-sm);
+  background: var(--ql-bg-primary);
+  color: var(--ql-text-normal);
+  font-size: 13px;
+  outline: none;
+  resize: vertical;
+  font-family: var(--ql-font);
+}
+
+.ql-form-textarea:focus {
+  border-color: var(--ql-accent);
+}
+
+.ql-form-select {
+  padding: 6px 28px 6px 10px;
+  border: 1px solid var(--ql-border-color);
+  border-radius: var(--ql-radius-sm);
+  background: var(--ql-bg-primary);
+  color: var(--ql-text-normal);
+  font-size: 13px;
+  outline: none;
+  cursor: pointer;
+  min-width: 140px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23888'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+
+.ql-modal-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--ql-border-color);
+}
+
+.ql-modal-divider {
+  margin: 16px 0;
+  border: none;
+  border-top: 1px solid var(--ql-border-color);
+}
+
+/* ---------- 分类管理列表 ---------- */
+.ql-category-list-modal {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: 8px;
+}
+
+.ql-category-list-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 4px;
+  border-bottom: 1px solid var(--ql-border-color);
+  flex-wrap: wrap;
+}
+
+.ql-category-item-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.ql-category-item-name {
+  flex: 1;
+  font-size: 14px;
+  color: var(--ql-text-normal);
+  min-width: 80px;
+}
+
+.ql-category-item-count {
+  font-size: 12px;
+  color: var(--ql-text-faint);
+  margin-right: auto;
+}
+
+/* 添加分类表单 */
+.ql-add-category-form {
+  margin-top: 8px;
+}
+
+.ql-form-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ql-text-faint);
+  margin-bottom: 8px;
+}
+
+.ql-add-category-inputs {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.ql-category-edit-icon {
+  width: 50px !important;
+  text-align: center;
+  font-size: 16px;
+}
+
+.ql-category-edit-name {
+  flex: 1;
+}
+
+/* ---------- 设置页脚 ---------- */
+.ql-settings-footer {
+  margin-top: 24px;
+  font-size: 12px;
+  color: var(--ql-text-faint);
+}
+
+/* ---------- 滚动条美化 ---------- */
+.ql-left-panel::-webkit-scrollbar,
+.ql-right-panel::-webkit-scrollbar {
+  width: 6px;
+}
+
+.ql-left-panel::-webkit-scrollbar-thumb,
+.ql-right-panel::-webkit-scrollbar-thumb {
+  background: var(--ql-text-faint);
+  border-radius: 3px;
+  opacity: 0.3;
+}
+
+.ql-left-panel::-webkit-scrollbar-thumb:hover,
+.ql-right-panel::-webkit-scrollbar-thumb:hover {
+  opacity: 0.5;
+}
+
+.ql-left-panel::-webkit-scrollbar-track,
+.ql-right-panel::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ---------- 响应式（窄屏时上下布局） ---------- */
+@media (max-width: 700px) {
+  .ql-main-container {
+    flex-direction: column;
+  }
+
+  .ql-left-panel {
+    flex: 0 0 auto;
+    max-width: none;
+    max-height: 40%;
+    border-right: none;
+    border-bottom: 1px solid var(--ql-border-color);
+  }
+
+  .ql-right-panel {
+    flex: 1;
+    padding: 16px;
+  }
+
+  .ql-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .ql-search-group {
+    max-width: none;
+  }
+
+  .ql-toolbar-buttons {
+    margin-left: 0;
+  }
+}
+
+/* ---------- 暗色主题微调 ---------- */
+.theme-dark .ql-plat-tencent {
+  color: #5A9CF8;
+  background: rgba(43, 127, 245, 0.15);
+}
+
+.theme-dark .ql-plat-feishu {
+  color: #5A8EFF;
+  background: rgba(51, 112, 255, 0.15);
+}
+
+.theme-dark .ql-plat-web {
+  color: #9CA3AF;
+  background: rgba(107, 114, 128, 0.15);
+}
+
+.theme-dark .ql-filter-tag.ql-filter-active {
+  color: #fff;
+}
