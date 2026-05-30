@@ -141,6 +141,7 @@ var Toolbar = class {
     }
   }
   build() {
+    var self = this;
     var toolbar = this.container.createDiv("ql-toolbar");
     toolbar.style.cssText = "display:flex;align-items:center;gap:6px;padding:6px 8px;border-bottom:0.5px solid var(--background-modifier-border);background:var(--background-secondary);flex-wrap:wrap;";
     // Platform filter tags (populated by setPlatforms)
@@ -919,8 +920,8 @@ var CategoryManageModal = class extends import_obsidian3.Modal {
   onSubmit;
   constructor(app, categories, platforms, links, onSubmit) {
     super(app);
-    this.categories = [...categories];
-    this.platforms = platforms ? [...platforms] : [];
+    this.categories = Array.isArray(categories) ? [...categories] : [];
+    this.platforms = Array.isArray(platforms) ? [...platforms] : [...DEFAULT_PLATFORMS];
     this.links = links;
     this.onSubmit = onSubmit;
   }
@@ -1308,7 +1309,7 @@ var QuickLinksView = class extends import_obsidian4.ItemView {
   }
   async openCategoryManageModal() {
     const data = await this.dataStore.readAllData();
-    new CategoryManageModal(this.app, data.categories, data.platforms || [], data.links, async (categories, platforms) => {
+    new CategoryManageModal(this.app, data.categories, data.platforms || DEFAULT_PLATFORMS, data.links, async (categories, platforms) => {
       data.categories = categories;
       data.platforms = platforms;
       await this.dataStore.saveData(data);
