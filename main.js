@@ -970,8 +970,10 @@ var CategoryManageModal = class extends import_obsidian3.Modal {
       var pitem = platList.createDiv("ql-category-list-item");
       var pcolor = pitem.createSpan("");
       pcolor.style.cssText = "display:inline-block;width:12px;height:12px;border-radius:3px;background:" + this.platforms[i].color + ";margin-right:8px;";
-      pitem.createSpan("ql-category-item-name", { text: this.platforms[i].name });
-      pitem.createSpan("ql-category-item-count", { text: this.platforms[i].id });
+      var pnameSpan = pitem.createSpan("ql-category-item-name");
+      pnameSpan.textContent = this.platforms[i].name;
+      var pidSpan = pitem.createSpan("ql-category-item-count");
+      pidSpan.textContent = this.platforms[i].id;
       var pdelBtn = pitem.createEl("button", { text: "\u5220\u9664", cls: "ql-btn ql-btn-small ql-btn-danger" });
       (function(idx) {
         pdelBtn.addEventListener("click", function(e) {
@@ -1009,10 +1011,12 @@ var CategoryManageModal = class extends import_obsidian3.Modal {
     for (var si = 0; si < sortedTags.length; si++) {
       var tagName = sortedTags[si][0];
       var tagCount = sortedTags[si][1];
-      var titem = tagList.createDiv("ql-category-list-item");
-      titem.createSpan("ql-category-item-name", { text: tagName });
-      titem.createSpan("ql-category-item-count", { text: "(" + tagCount + " \u4E2A\u94FE\u63A5)" });
-      var trenameBtn = titem.createEl("button", { text: "\u91CD\u547D\u540D", cls: "ql-btn ql-btn-small" });
+      var ttitem = tagList.createDiv("ql-category-list-item");
+      var tnameSpan = ttitem.createSpan("ql-category-item-name");
+      tnameSpan.textContent = tagName;
+      var tcntSpan = ttitem.createSpan("ql-category-item-count");
+      tcntSpan.textContent = "(" + tagCount + " \u4E2A\u94FE\u63A5)";
+      var trenameBtn = ttitem.createEl("button", { text: "\u91CD\u547D\u540D", cls: "ql-btn ql-btn-small" });
       (function(oldName) {
         trenameBtn.addEventListener("click", function(e) {
           e.stopPropagation();
@@ -1028,7 +1032,7 @@ var CategoryManageModal = class extends import_obsidian3.Modal {
           self.onOpen();
         });
       })(tagName);
-      var tdelBtn = titem.createEl("button", { text: "\u5220\u9664", cls: "ql-btn ql-btn-small ql-btn-danger" });
+      var tdelBtn = ttitem.createEl("button", { text: "\u5220\u9664", cls: "ql-btn ql-btn-small ql-btn-danger" });
       (function(oldName) {
         tdelBtn.addEventListener("click", function(e) {
           e.stopPropagation();
