@@ -921,7 +921,8 @@ var CategoryManageModal = class extends import_obsidian3.Modal {
   constructor(app, categories, platforms, links, onSubmit) {
     super(app);
     this.categories = Array.isArray(categories) ? [...categories] : [];
-    this.platforms = Array.isArray(platforms) ? [...platforms] : [...DEFAULT_PLATFORMS];
+    var plats = Array.isArray(platforms) && platforms.length > 0 ? platforms : DEFAULT_PLATFORMS;
+    this.platforms = [...plats];
     this.links = links;
     this.onSubmit = onSubmit;
   }
@@ -1371,7 +1372,7 @@ var QuickLinksView = class extends import_obsidian4.ItemView {
   }
   async openCategoryManageModal() {
     const data = await this.dataStore.readAllData();
-    new CategoryManageModal(this.app, data.categories, data.platforms || DEFAULT_PLATFORMS, data.links, async (categories, platforms) => {
+    new CategoryManageModal(this.app, data.categories, (data.platforms && data.platforms.length) ? data.platforms : DEFAULT_PLATFORMS, data.links, async (categories, platforms) => {
       data.categories = categories;
       data.platforms = platforms;
       await this.dataStore.saveData(data);
