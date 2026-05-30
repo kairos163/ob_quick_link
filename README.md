@@ -67,6 +67,16 @@ npm run build    # tsc + esbuild → main.js
 
 将 `main.js` 复制到插件目录覆盖。
 
+## 版本管理
+
+本仓库同时管理代码和 Skill 文档，任何变更都通过 Git 追踪：
+
+- `src/` — TypeScript 源码
+- `main.js` / `styles.css` — 编译产物
+- `docs/SKILL.md` — 插件开发与维护 Skill（架构、数据模型、关键机制）
+
+Skill 位于 `OB工作台\.workbuddy\skills\obsidian-quick-links\SKILL.md`，修改后同步到 `docs/SKILL.md` 一并推送。
+
 ## 项目结构
 
 ```
