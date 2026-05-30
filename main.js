@@ -930,24 +930,35 @@ var CategoryManageModal = class extends import_obsidian3.Modal {
     const { contentEl } = this;
     contentEl.empty();
     contentEl.addClass("ql-modal");
+    // Collect unique tags from all links
+    var tagMap = /* @__PURE__ */ new Map();
+    for (var ti = 0; ti < this.links.length; ti++) {
+      var linkTags = this.links[ti].tags;
+      if (linkTags && linkTags.length) {
+        for (var tj = 0; tj < linkTags.length; tj++) {
+          var tn = linkTags[tj].trim();
+          if (!tn) continue;
+          tagMap.set(tn, (tagMap.get(tn) || 0) + 1);
+        }
+      }
+    }
+    var sortedTags = Array.from(tagMap.entries()).sort(function(a, b) { return b[1] - a[1]; });
     contentEl.createEl("h2", {
-      text: "\u7BA1\u7406\u5206\u7C7B\u4E0E\u5E73\u53F0",
+      text: "\u7BA1\u7406\u5206\u7C7B\u3001\u5E73\u53F0\u4E0E\u6807\u7B7E",
       cls: "ql-modal-title"
     });
+    // --- 分类 ---
     contentEl.createEl("h3", { text: "\u5206\u7C7B" });
-    const listContainer = contentEl.createDiv("ql-category-list-modal");
+    var listContainer = contentEl.createDiv("ql-category-list-modal");
     if (this.categories.length === 0) {
-      listContainer.createEl("p", {
-        text: "\u6682\u65E0\u5206\u7C7B\uFF0C\u8BF7\u6DFB\u52A0",
-        cls: "ql-empty-hint"
-      });
+      listContainer.createEl("p", { text: "\u6682\u65E0\u5206\u7C7B\uFF0C\u8BF7\u6DFB\u52A0", cls: "ql-empty-hint" });
     }
     for (let i = 0; i < this.categories.length; i++) {
-      const cat = this.categories[i];
-      this.renderCategoryItem(listContainer, cat, i);
+      this.renderCategoryItem(listContainer, this.categories[i], i);
     }
     contentEl.createEl("hr", { cls: "ql-modal-divider" });
     this.renderAddForm(contentEl);
+    // --- 平台 ---
     contentEl.createEl("hr", { cls: "ql-modal-divider" });
     contentEl.createEl("h3", { text: "\u5E73\u53F0" });
     var platList = contentEl.createDiv("ql-category-list-modal");
@@ -987,22 +998,73 @@ var CategoryManageModal = class extends import_obsidian3.Modal {
       self.platforms.push({ id: id, name: name, color: color });
       self.onOpen();
     });
-    const btnGroup = contentEl.createDiv("ql-modal-buttons");
-    const saveBtn = btnGroup.createEl("button", {
-      text: "\u5B8C\u6210",
-      cls: "ql-btn ql-btn-primary"
+    // --- 标签 ---
+    contentEl.createEl("hr", { cls: "ql-modal-divider" });
+    contentEl.createEl("h3", { text: "\u6807\u7B7E" });
+    var tagList = contentEl.createDiv("ql-category-list-modal");
+    if (sortedTags.length === 0) {
+      tagList.createEl("p", { text: "\u6682\u65E0\u6807\u7B7E\uFF0C\u8BF7\u6DFB\u52A0", cls: "ql-empty-hint" });
+    }
+    for (var si = 0; si < sortedTags.length; si++) {
+      var tagName = sortedTags[si][0];
+      var tagCount = sortedTags[si][1];
+      var titem = tagList.createDiv("ql-category-list-item");
+      titem.createSpan("ql-category-item-name", { text: tagName });
+      titem.createSpan("ql-category-item-count", { text: "(" + tagCount + " \u4E2A\u94FE\u63A5)" });
+      var trenameBtn = titem.createEl("button", { text: "\u91CD\u547D\u540D", cls: "ql-btn ql-btn-small" });
+      (function(oldName) {
+        trenameBtn.addEventListener("click", function(e) {
+          e.stopPropagation();
+          var newName = prompt('\u8F93\u5165\u65B0\u6807\u7B7E\u540D\uFF1A', oldName);
+          if (!newName || newName.trim() === oldName) return;
+          newName = newName.trim();
+          for (var li = 0; li < self.links.length; li++) {
+            var lt = self.links[li].tags;
+            if (lt && lt.indexOf(oldName) >= 0) {
+              self.links[li].tags = lt.map(function(t) { return t === oldName ? newName : t; });
+            }
+          }
+          self.onOpen();
+        });
+      })(tagName);
+      var tdelBtn = titem.createEl("button", { text: "\u5220\u9664", cls: "ql-btn ql-btn-small ql-btn-danger" });
+      (function(oldName) {
+        tdelBtn.addEventListener("click", function(e) {
+          e.stopPropagation();
+          if (confirm('\u786E\u5B9A\u5220\u9664\u6807\u7B7E "' + oldName + '" \u5417\uFF1F\u5C06\u4ECE\u6240\u6709\u94FE\u63A5\u4E2D\u79FB\u9664\u3002')) {
+            for (var li = 0; li < self.links.length; li++) {
+              var lt = self.links[li].tags;
+              if (lt) {
+                self.links[li].tags = lt.filter(function(t) { return t !== oldName; });
+              }
+            }
+            self.onOpen();
+          }
+        });
+      })(tagName);
+    }
+    var tagForm = contentEl.createDiv("ql-add-category-form");
+    tagForm.createEl("label", { text: "\u6DFB\u52A0\u65B0\u6807\u7B7E", cls: "ql-form-label" });
+    var tagInputs = tagForm.createDiv("ql-add-category-inputs");
+    var tagnameInput = tagInputs.createEl("input", { type: "text", placeholder: "\u6807\u7B7E\u540D\u79F0", cls: "ql-form-input", attr: { style: "flex: 1" } });
+    var taddBtn = tagInputs.createEl("button", { text: "\u6DFB\u52A0", cls: "ql-btn ql-btn-primary" });
+    taddBtn.addEventListener("click", function() {
+      var tn = tagnameInput.value.trim();
+      if (!tn) { new import_obsidian3.Notice("\u8BF7\u8F93\u5165\u6807\u7B7E\u540D\u79F0"); return; }
+      if (tagMap.has(tn)) { new import_obsidian3.Notice('\u6807\u7B7E "' + tn + '" \u5DF2\u5B58\u5728'); return; }
+      tagMap.set(tn, 0);
+      sortedTags.push([tn, 0]);
+      self.onOpen();
     });
+    // --- 按钮 ---
+    var btnGroup = contentEl.createDiv("ql-modal-buttons");
+    var saveBtn = btnGroup.createEl("button", { text: "\u5B8C\u6210", cls: "ql-btn ql-btn-primary" });
     saveBtn.addEventListener("click", () => {
       this.onSubmit([...this.categories], [...this.platforms]);
       this.close();
     });
-    const cancelBtn = btnGroup.createEl("button", {
-      text: "\u53D6\u6D88",
-      cls: "ql-btn ql-btn-secondary"
-    });
-    cancelBtn.addEventListener("click", () => {
-      this.close();
-    });
+    var cancelBtn = btnGroup.createEl("button", { text: "\u53D6\u6D88", cls: "ql-btn ql-btn-secondary" });
+    cancelBtn.addEventListener("click", () => { this.close(); });
   }
   onClose() {
     const { contentEl } = this;
